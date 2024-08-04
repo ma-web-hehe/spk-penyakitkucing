@@ -14,7 +14,6 @@ const create = async (req, res) => {
         req.body.IDDIAGNOSA = shortId;
         const dataSample = await serviceSample.getAll()
 
-
         const mappingData = await mapData(dataSample)
 
         const attributes = Array.from(
@@ -24,47 +23,26 @@ const create = async (req, res) => {
                 });
                 return acc;
             }, new Set())
-        ).map(IDGEJALA => ({ IDGEJALA })
-        );
+        ).map(IDGEJALA => ({ IDGEJALA }));
 
         const decisionTree = await buildDecisionTree(mappingData, attributes)
 
         const result = await classify(decisionTree, req.body)
+        console.log(result)
+        if (result === "Unknown") {
+            response = { ...requestResponse.server_error }
+        } else {
+            req.body.IDPENYAKIT = result
+            const data = await service.create(req.body)
+            response = { ...data, result }
+        }
 
-        req.body.IDPENYAKIT = result
-        const data = await service.create(req.body)
-        response = { ...data, result }
     } catch (error) {
         logger.error(error)
-        response = { ...requestResponse.server_error }
+
     }
     res.json(response)
 }
-
-// const transformData = (data) => {
-//     if (!Array.isArray(data)) {
-//         throw new Error('Data harus berupa array');
-//     }
-
-//     if (data.length !== 1) {
-//         throw new Error('Data harus memiliki dua elemen: objek diagnosis dan IDDIAGNOSA');
-//     }
-
-//     const [diagnosis, idDiagnosa] = data;
-
-//     if (typeof idDiagnosa !== 'string') {
-//         throw new Error('IDDIAGNOSA harus berupa string');
-//     }
-
-//     if (typeof diagnosis !== 'object' || !Array.isArray(diagnosis.DAFTARGEJALA)) {
-//         throw new Error('Elemen pertama harus berupa objek dengan DAFTARGEJALA berupa array');
-//     }
-
-//     return {
-//         ...diagnosis,
-//         IDDIAGNOSA: idDiagnosa
-//     };
-// };
 
 const mapData = (data) => {
     const result = [];
@@ -141,7 +119,7 @@ const deleteOne = async (req, res) => {
 
 const getCount = async (req, res) => {
     try {
-        const data = await service.getCount({ IDUSER: req.params.id })
+        const data = await service.getCount()
         response = { ...requestResponse.success, data }
     } catch (error) {
         logger.error(error)

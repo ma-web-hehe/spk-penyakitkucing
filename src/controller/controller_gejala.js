@@ -20,52 +20,6 @@ const create = async (req, res) => {
     res.json(response)
 }
 
-const createExcel = async (req, res) => {
-    try {
-        const file = req.file
-
-        if (!file) {
-            return res.status(400).send("Masukkan File")
-        }
-
-        const workbook = xlsx.read(file.buffer, { type: 'buffer' })
-        const sheetName = workbook.SheetNames[0]
-        const sheet = workbook.Sheets[sheetName]
-
-        const dataJson = xlsx.utils.sheet_to_json(sheet)
-        // const processedData = dataJson.map(row => {
-        //     const newRow = {
-        //         NAME: row.NAME,
-        //         EMAIL: row.EMAIL,
-        //         AGE: row.AGE,
-        //         ADDRESS: row.ADDRESS,
-        //         id: v4()
-        //     };
-
-        //     Object.keys(row).forEach(key => {
-        //         if (!['NAME', 'EMAIL', 'AGE', 'ADDRESS'].includes(key)) {
-        //             const [category, subKey] = key.split('.');
-        //             if (!newRow[category]) {
-        //                 newRow[category] = {};
-        //             }
-        //             newRow[category][subKey] = row[key];
-        //         }
-        //     });
-
-        //     return newRow;
-        // });
-
-        for (let i = 0; i < dataJson.length; i++) {
-            const data = await service.create(dataJson[i])
-            response = { ...data }
-        }
-    } catch (error) {
-        logger.error(error)
-        response = { ...requestResponse.server_error }
-    }
-    res.json(response)
-}
-
 const getAll = async (req, res) => {
     try {
         const data = await service.getAll()
@@ -123,7 +77,6 @@ const getCount = async (req, res) => {
 
 module.exports = {
     create,
-    createExcel,
     getAll,
     getById,
     updateOne,

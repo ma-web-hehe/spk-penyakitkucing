@@ -7,6 +7,10 @@ const create = async (data) => {
     return { ...requestResponse.success, data: model }
 }
 
+const getAllHistory = async (attributes) => {
+    return await model.find({}, attributes)
+}
+
 const getAll = async () => {
     return await model.aggregate([
         {
@@ -64,8 +68,8 @@ const deleteOne = (condition) => {
     return model.deleteOne(condition)
 }
 
-const getCount = (condition) => {
-    return model.countDocuments(condition)
+const getCount = () => {
+    return model.countDocuments()
 }
 
 module.exports = {
@@ -75,5 +79,6 @@ module.exports = {
     getById,
     getByIdUser,
     deleteOne,
-    getCount
+    getCount,
+    getAllHistory
 }

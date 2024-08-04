@@ -8,6 +8,6 @@ router.get('/get/:id', controller.getById)
 router.get('/get-diagnosa/:id', controller.getByIdUser)
 router.put('/edit/:id', controller.updateOne)
 router.delete('/delete/:id', controller.deleteOne)
-router.get('/count/:id', controller.getCount)
+router.get('/count', controller.getCount)
 
 module.exports = router

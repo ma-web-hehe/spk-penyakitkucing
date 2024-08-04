@@ -66,7 +66,11 @@ const buildDecisionTree = (data, attributes) => {
 };
 
 const classify = (tree, diagnosis) => {
-  // console.log(tree)
+  console.log('Classify function called with:', { tree, diagnosis });
+  if (!tree) {
+    console.error('Tree is undefined');
+    return "Unknown";
+  }
   if (!tree.children) {
     return tree.label;
   }

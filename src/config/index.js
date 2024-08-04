@@ -10,7 +10,7 @@ const mongoOptions = {
 }
 
 // const allowedOrigins = ['https://photo-frontend.vercel.app']
-const allowedOrigins = ['https://frontend-spkkucing.vercel.app']
+const allowedOrigins = ['http://localhost:5173']
 
 if (process.env.NODE_DEV === 'development') {
     allowedOrigins.push('*')
